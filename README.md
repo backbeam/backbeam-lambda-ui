@@ -1,5 +1,7 @@
 # Backbeam lambda desktop UI
 
+![Home screen](https://raw.githubusercontent.com/backbeam/backbeam-lambda-ui/master/screenshots/home.png)
+
 ## Installing
 
 ```bash
