@@ -100,7 +100,7 @@ export default Vue.component('modal-lambda-function', {
       } else {
         backbeam.lambdaCreateFunction(params)
           .then(() => {
-            // this.props.onCreateFunction(params)
+            this.$dispatch('create-function', params)
             this.toggle()
           })
           .catch(errorHandler)

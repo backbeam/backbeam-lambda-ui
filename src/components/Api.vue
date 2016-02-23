@@ -83,7 +83,7 @@ export default Vue.component('api', {
       this.refreshAll()
     },
     syncEndpoint(endpoint) {
-      backbeam.apiSyncEndpoint(endpoint)
+      backbeam.apiSyncEndpoint(endpoint, true)
         .catch(errorHandler)
     },
     deleteEndpoint(endpoint) {
