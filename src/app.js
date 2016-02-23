@@ -1,20 +1,36 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { Router, Route, Link, browserHistory } from 'react-router'
-import Api from './components/api'
-import Dynamo from './components/dynamo'
-import App from './components/app'
-import Lambda from './components/lambda'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-ReactDOM.render((
-  <Router history={browserHistory}>
-    <Route path="/" component={App}>
-      <Route path="api" component={Api}>
-      </Route>
-      <Route path="dynamo" component={Dynamo}>
-      </Route>
-      <Route path="lambda" component={Lambda}>
-      </Route>
-    </Route>
-  </Router>
-), document.getElementById('app'))
+Vue.use(VueRouter)
+
+const classes = {
+  POST: 'success',
+  DELETE: 'danger',
+}
+
+Vue.filter('apiMethodLabel', function (method) {
+  return 'label-'+(classes[method] || 'primary')
+})
+
+import App from './components/App.vue'
+import Home from './components/Home.vue'
+import Api from './components/Api.vue'
+import Dynamo from './components/Dynamo.vue'
+import Lambda from './components/Lambda.vue'
+
+var router = new VueRouter()
+router.map({
+  '/': {
+    component: Home
+  },
+  '/api': {
+    component: Api
+  },
+  '/dynamo': {
+    component: Dynamo
+  },
+  '/lambda': {
+    component: Lambda
+  }
+})
+router.start(App, '#app')

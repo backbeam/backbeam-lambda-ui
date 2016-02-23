@@ -47,6 +47,10 @@ var config = {
         loaders: ['babel'],
         exclude: [nodeModulesPath]
       },
+      {
+        test: /\.vue$/, // a regex for matching all files that end in `.vue`
+        loader: 'vue'   // loader to use for matched files
+      }
     ]
   },
 };
