@@ -30,8 +30,7 @@
         <label>API</label>
         <div class="input-group">
           <select class="form-control" v-model="api">
-            <option value="" selected>Choose an API</option>
-            <option v-for="api in apis" value="api.name">{{api.name}}</option>
+            <option v-for="api in apis" :value="api.id">{{api.name}}</option>
           </select>
           <span class="input-group-btn">
             <button class="btn btn-primary" @click="$refs.modalApi.toggle()">Create…</button>
@@ -55,7 +54,6 @@ import Vue from 'vue'
 
 import ModalDialog from './ModalDialog.vue'
 import ModalAPI from './ModalApi.vue'
-import ModalRole from './ModalRole.vue'
 
 import MixinState from '../mixins/mixin-state'
 
@@ -88,7 +86,9 @@ export default Vue.component('modal-project-init', {
       backbeam.apiList()
         .then(list => {
           this.apis = list.items
-          this.selectedApi = list.items[0]
+          if (list.items.length > 0) {
+            this.api = list.items[0].id
+          }
         })
         .catch(errorHandler)
     },
@@ -101,7 +101,7 @@ export default Vue.component('modal-project-init', {
     onCreateAPI(data) {
       backbeam.apiCreate(data)
         .then(api => {
-          this.selectedApi = api
+          this.api = api.id
           this.apis.push(api)
         })
         .catch(errorHandler)
@@ -112,7 +112,7 @@ export default Vue.component('modal-project-init', {
         properties: [ 'openDirectory', 'createDirectory' ],
       })
       if (!dir || dir.length === 0) return
-      this.updateAttribute('directory', dir[0])
+      this.directory = dir[0]
     },
     toggle() {
       this.$refs.dialog.toggle()
@@ -120,7 +120,7 @@ export default Vue.component('modal-project-init', {
     init() {
       const dir = this.directory
       const params = {
-        api: this.selectedApi,
+        api: this.apis.find((api) => api.id = this.api),
         name: this.name,
         region: this.region,
       }
