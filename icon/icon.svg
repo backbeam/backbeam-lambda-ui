@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="1024" xml:space="preserve">
+	<g id="group2">
+		<path id="bezier2" stroke="none" fill="rgb(56, 134, 198)" d="M 49.71,49.92 L 28.32,62.26 6.94,49.92 6.94,74.61 49.71,99.3 92.48,74.61 49.71,49.92 Z M 49.71,49.92"></path>
+		<path id="bezier3" stroke="none" fill="rgb(56, 134, 198)" d="M 92.48,25.22 L 49.71,0.53 6.94,25.22 49.71,49.92 71.09,37.57 92.48,49.92 92.48,25.22 Z M 92.48,25.22"></path>
+	</g>
+</svg>

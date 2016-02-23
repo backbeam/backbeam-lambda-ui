@@ -36,3 +36,7 @@ Some notes:
 - Green buttons in the UI perform remote actions on AWS (deploy, sync, etc). Otherwise actions are performed only locally
 - After creating a project run the local development server with `npm start` in your working directory
 - This is a project under heavy development. Some features are not yet implemented.
+
+## Known issues
+
+If you get an `Invalid Method identifier specified` error while synching an API endpoint try synching again. This is an issue we are trying to mitigate.

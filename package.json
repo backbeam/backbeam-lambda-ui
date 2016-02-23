@@ -1,34 +1,43 @@
 {
   "private": true,
   "name": "backbeam-lambda-ui",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Backbeam lambda UI",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js",
     "build": "webpack --config webpack.config.js --progress --colors",
-    "watch": "webpack --config webpack.config.js --progress --colors --watch"
+    "watch": "webpack --config webpack.config.js --colors --watch"
   },
   "keywords": [],
   "dependencies": {
     "aws-sdk": "^2.2.30",
     "babel-loader": "^6.2.1",
-    "backbeam-lambda": "^0.1.2",
+    "backbeam-lambda": "^0.1.5",
     "electron-prebuilt": "^0.36.3",
-    "history": "^1.17.0",
     "ini": "^1.3.4",
-    "react": "^0.14.3",
-    "react-dom": "^0.14.3",
-    "react-router": "^1.0.3",
+    "pify": "^2.3.0",
+    "pync": "^1.0.0",
     "underscore": "^1.8.3",
-    "uppercamelcase": "^1.1.0"
+    "uppercamelcase": "^1.1.0",
+    "vue": "^1.0.16",
+    "vue-router": "^0.7.11"
   },
   "devDependencies": {
-    "babel-core": "^6.4.5",
-    "babel-preset-es2015": "^6.3.13",
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.3",
+    "babel-plugin-transform-runtime": "^6.5.2",
+    "babel-preset-es2015": "^6.5.0",
     "babel-preset-react": "^6.3.13",
-    "babel-runtime": "^6.3.19",
-    "webpack": "^1.12.11",
+    "babel-runtime": "^5.8.35",
+    "css-loader": "^0.23.1",
+    "electron-packager": "^5.2.1",
+    "vue-hot-reload-api": "^1.3.2",
+    "vue-html-loader": "^1.2.0",
+    "vue-loader": "^8.1.4",
+    "vue-style-loader": "^1.0.0",
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1",
     "webpack-notifier": "^1.2.1"
   }
 }
