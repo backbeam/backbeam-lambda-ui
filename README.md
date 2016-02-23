@@ -19,6 +19,10 @@ Advanced features:
 
 ## Installing
 
+Download one of the available [releases](https://github.com/backbeam/backbeam-lambda-ui/releases).
+
+Or build it yourself:
+
 ```bash
 # Download the project
 # Build for the first time

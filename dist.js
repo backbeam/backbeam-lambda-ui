@@ -34,38 +34,36 @@ function generate() {
 function zipFiles(paths) {
   console.log('Zipping files')
   return pync.map(paths, (appPath) => (
-    exec(`zip -qr "${appPath}.zip" "${appPath}"`)
+    exec(`zip -qr "${path.basename(appPath)}.zip" "${path.basename(appPath)}"`, { cwd: dist })
   ))
-  .then(() => paths)
 }
 
 function tagRepo() {
   console.log('Creating git tag', tag)
   exec(`git tag ${tag}`)
     .then(() => exec('git push --tags'))
-    .then(() => paths)
 }
 
 // https://github.com/aktau/github-release
 function release(paths) {
   console.log('Creating GitHub release')
-  exec(`github-release release \
+  return exec(`github-release release \
         --user backbeam \
         --repo backbeam-lambda-ui \
         --tag ${tag} \
         --name "Backbeam Lambda ${tag}" \
         --description "Released Backbeam Lambda ${tag}" \
         --pre-release`)
-  .then(() => {
-    pync.series(paths, (file) => {
+  .then(() => (
+    pync.series(paths, (file) => (
       exec(`github-release upload \
             --user backbeam \
             --repo backbeam-lambda-ui \
             --tag ${tag} \
-            --name "${path.dirname(file)}.zip" \
-            --file "${file}"`)
-    })
-  })
+            --name "${path.basename(file)}.zip" \
+            --file "${path.basename(file)}.zip"`, { cwd: dist })
+    ))
+  ))
 }
 
 if (module.id === require.main.id) {
