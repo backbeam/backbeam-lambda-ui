@@ -21,13 +21,8 @@ import errorHandler from '../utils/error-handler'
 export default Vue.component('job', {
   props: ['jobId', 'name', 'log', 'progress', 'steps'],
   data: () => ({
-    jobId: null,
-    name: null,
-    log: null,
     done: false,
     failed: false,
-    progress: 0,
-    steps: 0,
   }),
   created() {
     this.subscriber = subscriber(this, 'job:progress', 'job:succees', 'job:fail')

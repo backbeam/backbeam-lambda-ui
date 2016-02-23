@@ -5,7 +5,9 @@
         <a href="javascript:void(0)" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">
           {{project || 'No project selected'}} <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li><a href="javascript:void(0)">Refresh</a></li>
+          <li :class="{'disabled': !project}">
+            <a href="#" @click.prevent="refresh">Refresh</a>
+          </li>
           <li role="separator" class="divider"></li>
           <li><a href="#" @click.prevent="showOpenDialog">Open…</a></li>
           <li><a href="#" @click.prevent="showProjectInit">New project…</a></li>
@@ -13,9 +15,9 @@
       </list-item-dropdown>
     </ul>
     <ul class="nav navbar-nav navbar-right" v-if="project">
-      <li><a v-link="{path: '/lambda'}">Lambda</a></li>
-      <li><a v-link="{path: '/api'}">API</a></li>
-      <li><a v-link="{path: '/dynamo'}">Dynamo</a></li>
+      <li v-link-active><a v-link="{'activeClass': 'active', path: '/lambda'}">Lambda</a></li>
+      <li v-link-active><a v-link="{'activeClass': 'active', path: '/api'}">API</a></li>
+      <li v-link-active><a v-link="{'activeClass': 'active', path: '/dynamo'}">Dynamo</a></li>
     </ul>
   </navbar>
 
@@ -83,10 +85,15 @@ export default Vue.component('App', {
       backbeam.readConfig()
         .then(config => {
           this.project = config.project
-          this.$router.go('/api')
+          if (window.location.hash === '#!/') {
+            this.$router.go('/api')
+          }
         })
         .catch(errorHandler)
     },
+    refresh() {
+      backbeam.setDirectory(backbeam.getDirectory())
+    }
   }
 })
 </script>

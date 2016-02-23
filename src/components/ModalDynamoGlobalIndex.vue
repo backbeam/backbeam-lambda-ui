@@ -45,10 +45,10 @@
         <label>Provisioned throughput</label>
         <div class="row">
           <div class="col-xs-6">
-            <input type="number" class="form-control" placeholder="Read capacity units" v-model="readCapacity">
+            <input type="number" class="form-control" placeholder="Read capacity units" v-model="readCapacity" number>
           </div>
           <div class="col-xs-6">
-            <input type="number" class="form-control" placeholder="Write capacity units" v-model="writeCapacity">
+            <input type="number" class="form-control" placeholder="Write capacity units" v-model="writeCapacity" number>
           </div>
         </div>
       </div>

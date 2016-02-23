@@ -37,11 +37,11 @@
       <div class="row">
         <div class="form-group col-xs-6">
           <label>Memory</label>
-          <input type="number" class="form-control" placeholder="Memory size in MB" v-model="memory">
+          <input type="number" class="form-control" placeholder="Memory size in MB" v-model="memory" number>
         </div>
         <div class="form-group col-xs-6">
           <label>Timeout</label>
-          <input type="number" class="form-control" placeholder="Maximum function execution time in seconds" v-model="timeout">
+          <input type="number" class="form-control" placeholder="Maximum function execution time in seconds" v-model="timeout" number>
         </div>
       </div>
     </div>

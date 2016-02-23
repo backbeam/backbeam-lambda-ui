@@ -30,7 +30,7 @@
         <label>API</label>
         <div class="input-group">
           <select class="form-control" v-model="api">
-            <option v-for="api in apis" :value="api.id">{{api.name}}</option>
+            <option v-for="api in apis" :value="api">{{api.name}}</option>
           </select>
           <span class="input-group-btn">
             <button class="btn btn-primary" @click="$refs.modalApi.toggle()">Create…</button>
@@ -86,9 +86,7 @@ export default Vue.component('modal-project-init', {
       backbeam.apiList()
         .then(list => {
           this.apis = list.items
-          if (list.items.length > 0) {
-            this.api = list.items[0].id
-          }
+          this.api = list.items[0]
         })
         .catch(errorHandler)
     },
@@ -101,7 +99,7 @@ export default Vue.component('modal-project-init', {
     onCreateAPI(data) {
       backbeam.apiCreate(data)
         .then(api => {
-          this.api = api.id
+          this.api = api
           this.apis.push(api)
         })
         .catch(errorHandler)
@@ -119,11 +117,7 @@ export default Vue.component('modal-project-init', {
     },
     init() {
       const dir = this.directory
-      const params = {
-        api: this.apis.find((api) => api.id = this.api),
-        name: this.name,
-        region: this.region,
-      }
+      const params = this.pick('api', 'name', 'region')
       backbeam.init(dir, params)
         .then(() => {
           this.toggle()
