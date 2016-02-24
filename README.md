@@ -43,4 +43,4 @@ Some notes:
 
 ## Known issues
 
-If you get an `Invalid Method identifier specified` error while synching an API endpoint try synching again. This is an issue we are trying to mitigate.
+The dynamo part is work in progress.
