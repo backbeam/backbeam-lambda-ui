@@ -1,7 +1,7 @@
 <template>
   <div class="pull-right" style="padding-top: 10px">
     <button type="button" class="btn btn-primary" @click="$refs.modalEndpoint.toggle()">New API endpoint</button>
-    <!-- <button type="button" class="btn btn-success">Deploy</button> -->
+    <button type="button" class="btn btn-success" @click="$refs.modalDeployment.toggle()">Deploy</button>
   </div>
   <h1>API</h1><hr/>
 
@@ -34,18 +34,23 @@
 
   <modal-api-endpoint v-ref:modal-endpoint></modal-api-endpoint>
 
+  <modal-deployment v-ref:modal-deployment @create-deployment="onCreateDeployment"></modal-deployment>
+
   <div class="alert alert-info" role="alert" v-if="api">
-    <p>Public base URL: https://{{api.id}}.execute-api.eu-west-1.amazonaws.com/<em>stage</em></p>
+    <p>Public base URL: https://{{api.id}}.execute-api.{{region}}.amazonaws.com/<em>stage</em></p>
     <p>Local base URL: http://localhost:3333</p>
   </div>
 
 </template>
 
 <script>
+var pync = require('pync')
+
 import Vue from 'vue'
 
-import ModalDialog from './ModalDialog.vue'
 import ApiEndpoint from './ModalApiEndpoint.vue'
+import ModalDeployment from './ModalDeployment.vue'
+
 import backbeam from '../utils/backbeam-singleton'
 import subscriber from '../utils/backbeam-subscriber'
 import errorHandler from '../utils/error-handler'
@@ -54,10 +59,12 @@ export default Vue.component('api', {
   data: () => ({
     endpoints: [],
     api: null,
+    region: null,
   }),
   created() {
     this.subscriber = subscriber(this, 'directory_changed', 'api_changed')
     this.refreshAll()
+    this.region = backbeam.getRegion()
   },
   destroyed() {
     this.subscriber.unsubscribe()
@@ -82,6 +89,14 @@ export default Vue.component('api', {
     onApiChanged() {
       this.refreshAll()
     },
+    onCreateDeployment(params) {
+      console.log('params', params)
+      pync.series(this.endpoints, (endpoint) => backbeam.apiSyncEndpoint(endpoint, true))
+        .then(() => (
+          backbeam.apiCreateStage(params)
+        ))
+        .catch(errorHandler)
+    },
     syncEndpoint(endpoint) {
       backbeam.apiSyncEndpoint(endpoint, true)
         .catch(errorHandler)
@@ -95,7 +110,7 @@ export default Vue.component('api', {
         confirmButtonColor: '#ff0039',
         confirmButtonText: 'Yes, delete it!',
         closeOnConfirm: true,
-      }, function() {
+      }, () => {
         backbeam.apiDeleteEndpoint(endpoint)
           .catch(errorHandler)
       })
