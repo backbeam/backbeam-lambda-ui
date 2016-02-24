@@ -23,7 +23,7 @@
       <div class="form-group">
         <label>Region</label>
         <select class="form-control" v-model="region">
-          <option v-for="region in ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-northeast-1']" :value="region">{{region}}</option>
+          <option v-for="region in availableRegions" :value="region">{{region}}</option>
         </select>
       </div>
       <div class="form-group">
@@ -44,7 +44,7 @@
     </div>
   </modal-dialog>
 
-  <modal-api v-ref:modal-api @create-api="onCreateAPI"></modal-api>
+  <modal-api v-ref:modal-api @create-api="onCreateApi"></modal-api>
 </template>
 
 <script>
@@ -68,6 +68,7 @@ export default Vue.component('modal-project-init', {
     name: '',
     directory: '',
     region: 'us-east-1',
+    availableRegions: ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-northeast-1'],
   })],
   created() {
     this.subscriber = subscriber(this, 'credentials_changed')
@@ -96,7 +97,7 @@ export default Vue.component('modal-project-init', {
       this.apis = []
       this.refreshApis()
     },
-    onCreateAPI(data) {
+    onCreateApi(data) {
       backbeam.apiCreate(data)
         .then(api => {
           this.api = api
