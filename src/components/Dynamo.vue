@@ -18,21 +18,35 @@
       <tr v-for="table in tables">
         <td><code>{{table.name}}</code></td>
         <td>
-          <span v-for="key in table.keys">
-            <strong>{{key.name}}</strong>:<em>{{key.type}}</em><br/>
+          <strong>{{table.hashKeyName}}</strong>: <em>{{table.hashKeyType}}</em><br/>
+          <span v-if="table.rangeKeyName">
+            <strong>{{table.rangeKeyName}}</strong>: <em>{{table.rangeKeyType}}</em><br/>
           </span>
         </td>
-        <td>{indexes(table.localIndexes)}</td>
-        <td>{indexes(table.globalIndexes)}</td>
+        <td v-for="arr in [table.localIndexes, table.globalIndexes]">
+          <span v-if="arr.length === 0">none</span>
+          <ul v-if="arr.length > 0" style="list-style-type: 'none'; margin: 0; padding: 0">
+            <li v-for="index in arr">{{index.name}}</li>
+          </ul>
+        </td>
         <td class="text-right">
-          <a class="btn btn-primary btn-xs">edit</a>
-          <a class="btn btn-danger btn-xs">delete</a>
+          <button class="btn btn-primary btn-xs" @click="editTable(table)">edit</button>
+          <button class="btn btn-danger btn-xs" @click="deleteTable(table)">delete</button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <modal-dynamo-table v-ref:modal-table @create-table="onCreateTable"></modal-dynamo-table>
+  <modal-dynamo-table v-ref:modal-table
+    @create-table="onCreateTable"
+    @edit-table="onEditTable"
+    ></modal-dynamo-table>
+
+  <div class="alert alert-info" role="alert">
+    <p>You should be have a local Dynamo DB running at port <em>4567</em></p>
+    <p>When creating the project Backbeam configures a <code>npm run dynamo</code> script. You can use it to launch Dynamo locally</p>
+  </div>
+
 </template>
 
 <script>
@@ -47,19 +61,19 @@ import errorHandler from '../utils/error-handler'
 
 export default Vue.component('dynamo', {
   data: () => ({
-    tables: [],
+    tables: null,
   }),
   created() {
-    this.subscriber = subscriber(this, 'directory_changed', 'dynamo_changed')
-    // this.refreshAll()
+    this.subscriber = subscriber(this, 'directory_changed', 'dynamo_changed', 'credentials_changed')
+    if (this.tables === null && backbeam.credentialsLoaded) {
+      this.refreshAll()
+    }
   },
   destroyed() {
     this.subscriber.unsubscribe()
   },
   methods: {
     showCreateDialog() {
-      this.localIndexes = []
-      this.globalIndexes = []
       this.$refs.modalTable.toggle()
     },
     refreshAll() {
@@ -75,8 +89,33 @@ export default Vue.component('dynamo', {
     onDynamoChanged() {
       this.refreshAll()
     },
-    onCreateTable() {
-
+    onCredentialsChanged() {
+      this.refreshAll()
+    },
+    onEditTable(params) {
+      backbeam.dynamoEditTable(params)
+        .catch(errorHandler)
+    },
+    onCreateTable(params) {
+      backbeam.dynamoCreateTable(params)
+        .catch(errorHandler)
+    },
+    editTable(table) {
+      this.$refs.modalTable.toggle(table)
+    },
+    deleteTable(table) {
+      swal({
+        title: 'Are you sure?',
+        text: 'You will not be able to undo this change',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ff0039',
+        confirmButtonText: 'Yes, delete it!',
+        closeOnConfirm: true,
+      }, () => {
+        backbeam.dynamoDeleteTable(table)
+          .catch(errorHandler)
+      })
     }
   }
 })

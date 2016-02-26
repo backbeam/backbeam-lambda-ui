@@ -4,21 +4,21 @@
       <button type="button" class="close" @click="toggle" aria-label="Close">
         <span aria-hidden="true">×</span>
       </button>
-      <h4 class="modal-title">New table</h4>
+      <h4 class="modal-title">{{ prev ? 'Edit table' : 'New table'}}</h4>
     </div>
     <div class="modal-body">
       <div class="form-group">
         <label>Table name</label>
-        <input type="text" class="form-control" placeholder="" v-model="name">
+        <input type="text" class="form-control" placeholder="" v-model="name" :disabled="prev">
       </div>
       <div class="form-group">
         <label>Primary key hash/partition key</label>
         <div class="row">
           <div class="col-xs-6">
-            <input type="text" class="form-control" placeholder="Key name" v-model="hashKeyName">
+            <input type="text" class="form-control" placeholder="Key name" v-model="hashKeyName" :disabled="prev">
           </div>
           <div class="col-xs-6">
-            <select class="form-control" v-model="hashKeyType">
+            <select class="form-control" v-model="hashKeyType" :disabled="prev">
               <option value="string">string</option>
               <option value="number">number</option>
               <option value="binary">binary</option>
@@ -30,10 +30,10 @@
         <label>Primary key range/sort key (optional)</label>
         <div class="row">
           <div class="col-xs-6">
-            <input type="text" class="form-control" placeholder="Key name" v-model="rangeKeyName">
+            <input type="text" class="form-control" placeholder="Key name" v-model="rangeKeyName" :disabled="prev">
           </div>
           <div class="col-xs-6">
-            <select class="form-control" v-model="rangeKeyType">
+            <select class="form-control" v-model="rangeKeyType" :disabled="prev">
               <option value="string">string</option>
               <option value="number">number</option>
               <option value="binary">binary</option>
@@ -50,14 +50,14 @@
               <li v-for="index in localIndexes">
                 <a href="#"
                   @click.prevent="removeLocalIndex(index)" style="margin-right: 5px">
-                    <span class="fa fa-close" style="padding-right: 3px; color: red"></span>
+                    <span class="fa fa-close" style="padding-right: 3px; color: red" v-if="!prev"></span>
                 </a>
                 {{index.name}}
               </li>
             </ul>
           </div>
           <div class="col-sm-4">
-            <button class="btn btn-primary btn-block" @click="$refs.localIndexDialog.toggle()">Add local index…</button>
+            <button class="btn btn-primary btn-block" @click="$refs.localIndexDialog.toggle()" :disabled="prev">Add local index…</button>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-default" @click="toggle">Close</button>
-      <button type="button" class="btn btn-primary" @click="createTable">Create</button>
+      <button type="button" class="btn btn-primary" @click="save">{{ prev ? 'Save changes' : 'Create'}}</button>
     </div>
   </modal-dialog>
 
@@ -115,6 +115,7 @@ import MixinState from '../mixins/mixin-state'
 
 export default Vue.component('modal-dynamo-table', {
   mixins: [MixinState({
+    prev: false,
     name: '',
     rangeKeyName: null,
     rangeKeyType: null,
@@ -126,8 +127,8 @@ export default Vue.component('modal-dynamo-table', {
     writeCapacity: 1,
   })],
   methods: {
-    createTable() {
-      this.$dispatch('create-table', this.pick())
+    save() {
+      this.$dispatch(this.prev ? 'edit-table' : 'create-table', this.pick())
       this.toggle()
     },
     onAddLocalIndex(data) {
@@ -142,8 +143,14 @@ export default Vue.component('modal-dynamo-table', {
     removeGlobalIndex(index) {
       this.globalIndexes.splice(this.globalIndexes.indexOf(index), 1)
     },
-    toggle() {
-      this.reset()
+    toggle(table) {
+      if (table) {
+        this.prev = true
+        this.load(table)
+      } else {
+        this.prev = false
+        this.reset()
+      }
       this.$refs.dialog.toggle()
     },
   }
