@@ -90,8 +90,7 @@ export default Vue.component('api', {
       this.refreshAll()
     },
     onCreateDeployment(params) {
-      console.log('params', params)
-      pync.series(this.endpoints, (endpoint) => backbeam.apiSyncEndpoint(endpoint, true))
+      backbeam.apiSyncAllEndpoints(true)
         .then(() => (
           backbeam.apiCreateStage(params)
         ))

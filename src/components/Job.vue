@@ -2,7 +2,7 @@
   <div class="job">
     <p><strong>{{name}}</strong>: {{log}}</p>
     <div class="progress">
-      <div class="progress-bar progress-bar-striped" role="progressbar"
+      <div class="progress-bar progress-bar-striped active" role="progressbar"
         aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"
         :class="{'progress-bar-success': done, 'progress-bar-danger': failed}"
         :style="{'width': Math.round(progress*100/steps)+'%'}">
@@ -35,6 +35,8 @@ export default Vue.component('job', {
       if (params.id !== this.jobId) return
       this.log = params.log
       this.progress++
+      this.steps = params.steps
+      this.name = params.name
     },
     onJobSuccees(params) {
       if (params.id !== this.jobId) return

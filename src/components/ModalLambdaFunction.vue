@@ -17,7 +17,12 @@
       </div>
       <div class="form-group">
         <label>File name</label>
-        <input type="text" class="form-control" placeholder="The entry file" v-model="filename">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="The entry file" v-model="filename">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" @click="showOpenDialog">Choose…</button>
+          </span>
+        </div>
       </div>
       <div class="form-group">
         <label>JavaScript method name (handler)</label>
@@ -57,6 +62,8 @@
 </template>
 
 <script>
+const electron = require('electron')
+
 import Vue from 'vue'
 
 import ModalDialog from './ModalDialog.vue'
@@ -105,6 +112,20 @@ export default Vue.component('modal-lambda-function', {
           })
           .catch(errorHandler)
       }
+    },
+    showOpenDialog() {
+      const dialog = electron.remote.dialog
+      var filename = dialog.showSaveDialog(electron.remote.getCurrentWindow(), {
+        defaultPath: backbeam.getDirectory(),
+        filters: [
+          { name: 'JavaScript files', extensions: ['js'] },
+        ],
+      })
+      if (!filename) return
+      if (filename.indexOf(backbeam.getDirectory()) === 0) {
+        filename = filename.substring(backbeam.getDirectory().length+1)
+      }
+      this.filename = filename
     },
     onCreateRole(data) {
       backbeam.iamCreateRole(data)

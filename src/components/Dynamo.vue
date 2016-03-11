@@ -30,6 +30,7 @@
           </ul>
         </td>
         <td class="text-right">
+          <button class="btn btn-success btn-xs" @click="syncTable(table)">sync</button>
           <button class="btn btn-primary btn-xs" @click="editTable(table)">edit</button>
           <button class="btn btn-danger btn-xs" @click="deleteTable(table)">delete</button>
         </td>
@@ -116,6 +117,10 @@ export default Vue.component('dynamo', {
         backbeam.dynamoDeleteTable(table)
           .catch(errorHandler)
       })
+    },
+    syncTable(table) {
+      backbeam.dynamoSyncTable(table, backbeam.remoteDynamo())
+        .catch(errorHandler)
     }
   }
 })

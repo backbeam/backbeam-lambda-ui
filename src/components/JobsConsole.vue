@@ -44,7 +44,7 @@ export default Vue.component('jobs-console', {
       return this.jobs.find((job) => job.id === id)
     },
     onJobStart(job) {
-      this.jobs.push(Object.assign({ progress: 0 }, job))
+      this.jobs.push(Object.assign({ progress: 1 }, job))
     },
     onJobSuccees(params) {
       this.removeJob(params.id)

@@ -2,12 +2,11 @@ import backbeam from '../utils/backbeam-singleton'
 
 var uppercamelcase = require('uppercamelcase')
 
-export default function(component, ...events) {
-
+export default function (component, ...events) {
   component.listeners = {}
-  events.forEach(event => {
+  events.forEach((event) => {
     let listener = (...args) => {
-      let methodName = 'on'+uppercamelcase(event.replace(/\W/g, '_'))
+      let methodName = 'on' + uppercamelcase(event.replace(/\W/g, '_'))
       if (!component[methodName]) {
         console.error(`Listener ${component} does not listen properly to ${methodName}`)
         return
@@ -19,8 +18,8 @@ export default function(component, ...events) {
   })
 
   return {
-    unsubscribe: function() {
-      Object.keys(component.listeners).forEach(event => {
+    unsubscribe: () => {
+      Object.keys(component.listeners).forEach((event) => {
         backbeam.removeListener(event, component.listeners[event])
       })
     }
